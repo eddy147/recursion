@@ -7,22 +7,48 @@
        (product (rest coll)))))
 
 (defn singleton? [coll]
-  :-)
+  (if (empty? coll)
+    false
+    (if (empty? (rest coll))
+      true
+      false)))
 
 (defn my-last [coll]
-  :-)
+  (if (empty? coll)
+    nil
+    (if (singleton? coll)
+      (first coll)
+      (my-last (rest coll)))))
 
 (defn max-element [a-seq]
-  :-)
+  (cond
+    (empty? a-seq)
+    nil
+    (singleton? a-seq)
+    (first a-seq)
+    :else
+    (max (first a-seq) (max-element (rest a-seq)))))
 
 (defn seq-max [seq-1 seq-2]
-  [:-])
+  (let [count-1 (count seq-1)
+        count-2 (count seq-2)]
+    (if (> count-1 count-2)
+      seq-1
+      seq-2)))
 
 (defn longest-sequence [a-seq]
-  [:-])
+  (cond
+    (empty? a-seq) nil
+    (singleton? a-seq) (first a-seq)
+    :else
+    (seq-max (first a-seq) (longest-sequence (rest a-seq)))))
 
 (defn my-filter [pred? a-seq]
-  [:-])
+  (if (empty? a-seq)
+    a-seq
+    (if (pred? (first a-seq))
+      (cons (first a-seq) (my-filter pred? (rest a-seq)))
+      (my-filter pred? (rest a-seq)))))
 
 (defn sequence-contains? [elem a-seq]
   :-)
