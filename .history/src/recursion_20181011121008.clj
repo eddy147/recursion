@@ -74,6 +74,7 @@
     (cons (first a-seq) (my-take-while pred? (rest a-seq)))
     :else '()))
 
+
 (defn my-drop-while [pred? a-seq]
   (cond
     (empty? a-seq) '()
@@ -81,11 +82,7 @@
     :else a-seq))
 
 (defn seq= [a-seq b-seq]
-  (cond
-    (and (empty? a-seq) (empty? b-seq)) true
-    (or (empty? a-seq) (empty? b-seq)) false
-    (not= (first a-seq) (first b-seq)) false
-    :else (seq= (rest a-seq) (rest b-seq))))
+  :-)
 
 (defn my-map [f seq-1 seq-2]
   [:-])

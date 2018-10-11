@@ -79,7 +79,6 @@
     (empty? a-seq) '()
     (pred? (first a-seq)) (my-drop-while pred? (rest a-seq))
     :else a-seq))
-
 (defn seq= [a-seq b-seq]
   (cond
     (and (empty? a-seq) (empty? b-seq)) true
