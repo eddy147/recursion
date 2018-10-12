@@ -107,25 +107,41 @@
     :else (+ (fib (dec n)) (fib (dec (dec n))))))
 
 (defn my-repeat [how-many-times what-to-repeat]
-  [:-])
+  (if (<= how-many-times 0)
+    '()
+    (cons what-to-repeat (my-repeat (- how-many-times 1) what-to-repeat))))
 
 (defn my-range [up-to]
-  [:-])
+  (cond
+    (>= 0 up-to) '()
+    :else
+    (cons (dec up-to) (my-range (dec up-to)))))
 
 (defn tails [a-seq]
-  [:-])
+  (cond
+    (empty? a-seq) '(())
+    :else (cons a-seq (tails (rest a-seq)))))
 
 (defn inits [a-seq]
-  [:-])
+  (reverse (map reverse (tails (reverse a-seq)))))
 
 (defn rotations [a-seq]
-  [:-])
+  (if (empty? a-seq)
+    '(())
+    (for [i (range (count a-seq))]
+      (concat (drop i a-seq) (take i a-seq)))))
 
 (defn my-frequencies-helper [freqs a-seq]
-  [:-])
+  (let [curr-elem (first a-seq)
+        n-found (get freqs curr-elem)]
+    (if (empty? a-seq)
+      freqs
+      (if n-found
+        (my-frequencies-helper (conj freqs {curr-elem (inc n-found)}) (rest a-seq))
+        (my-frequencies-helper (conj freqs {curr-elem 1}) (rest a-seq))))))
 
 (defn my-frequencies [a-seq]
-  [:-])
+  (my-frequencies-helper {} a-seq))
 
 (defn un-frequencies [a-map]
   [:-])
