@@ -140,35 +140,71 @@
   (my-frequencies-helper {} a-seq))
 
 (defn un-frequencies [a-map]
-  (if (empty? a-map)
-    a-map
-    (let [key-cur (first (map key a-map))
-          freq-cur (get a-map key-cur)]
-      (conj []) (repeat freq-cur key-cur)))))
-
-(un-frequencies {:a 3 :b 2 "^_^" 1})
+  (reduce concat (map #(repeat (second %) (first %)) a-map)))
 
 (defn my-take [n coll]
-  [:-])
+  (cond
+    (or (<= n 0) (empty? coll))
+    []
+    :else
+    (cons (first coll) (my-take (dec n) (rest coll)))))
+
+(defn my-drop-helper [c n coll]
+  (cond
+    (empty? coll) []
+    (= c n) coll
+    (< c n) (my-drop-helper (inc c) n (rest coll))
+    :else []))
 
 (defn my-drop [n coll]
-  [:-])
+  (my-drop-helper 0 n coll))
 
 (defn halve [a-seq]
-  [:-])
+  (let [h (int (/ (count a-seq) 2))]
+    (vector (my-take h a-seq) (my-drop h a-seq))))
 
 (defn seq-merge [a-seq b-seq]
-  [:-])
+  (cond
+    (empty? a-seq) b-seq
+    (empty? b-seq) a-seq
+    :else
+    (let [a (first a-seq) b (first b-seq)]
+      (if (< a b)
+        (cons a (seq-merge (rest a-seq) b-seq))
+        (cons b (seq-merge (rest b-seq) a-seq))))))
 
 (defn merge-sort [a-seq]
-  [:-])
+  (if (>= 1 (count a-seq))
+    a-seq
+    (apply seq-merge (map merge-sort (halve a-seq)))))
 
 (defn split-into-monotonics [a-seq]
-  [:-])
+  (let [monotonic? (fn mono-req [x]
+                     (if (>= 2 (count x))
+                       true
+                       (let [[a b c] x]
+                         (if (< 0 (* (- a b) (- b c)))
+                           (mono-req (rest x))
+                           false))))
+        start (last (take-while monotonic? (inits a-seq)))]
+    (if (empty? a-seq)
+      '()
+      (cons start (split-into-monotonics (drop (count start) a-seq))))))
 
 (defn permutations [a-set]
-  [:-])
+  (cond
+    (empty? a-set) '(())
+    (= 1 (count a-set)) (vector a-set)
+    :else (let [join (fn [x y] (map #(cons x %) y))]
+            (->> a-set
+                 (rotations)
+                 (map #(join (first %) (permutations (rest %))))
+                 (apply concat)))))
 
 (defn powerset [a-set]
-  [:-])
-
+  (if (empty? a-set)
+    #{#{}}
+    (let [actually-a-set (set a-set)
+          a (first actually-a-set)
+          s (powerset (disj actually-a-set a))]
+      (clojure.set/union s (map #(conj % a) s)))))

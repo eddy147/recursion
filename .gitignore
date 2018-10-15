@@ -10,3 +10,4 @@
 /.lein-plugins
 .history
 .nrepl-port
+.gorilla-port
