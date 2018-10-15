@@ -25,11 +25,7 @@
       false)))
 
 (defn my-last [coll]
-  (if (empty? coll)
-    nil
-    (if (singleton? coll)
-      (first coll)
-      (my-last (rest coll)))))
+  (when (seq coll) (if (singleton? coll) (first coll) (my-last (rest coll)))))
 
 (defn max-element [a-seq]
   (cond
@@ -96,20 +92,20 @@
 
 (defn power [n k]
   (cond
-    (= 0 n) 0
-    (= 0 k) 1
+    (zero? n) 0
+    (zero? k) 1
     :else (* n (power n (dec k)))))
 
 (defn fib [n]
   (cond
-    (= 0 n) 0
+    (zero? n) 0
     (= 1 n) 1
     :else (+ (fib (dec n)) (fib (dec (dec n))))))
 
 (defn my-repeat [how-many-times what-to-repeat]
   (if (<= how-many-times 0)
     '()
-    (cons what-to-repeat (my-repeat (- how-many-times 1) what-to-repeat))))
+    (cons what-to-repeat (my-repeat (dec how-many-times) what-to-repeat))))
 
 (defn my-range [up-to]
   (cond
@@ -133,18 +129,24 @@
 
 (defn my-frequencies-helper [freqs a-seq]
   (let [curr-elem (first a-seq)
-        n-found (get freqs curr-elem)]
+        n-found (if (number? (get freqs curr-elem))
+                  (get freqs curr-elem)
+                  0)]
     (if (empty? a-seq)
       freqs
-      (if n-found
-        (my-frequencies-helper (conj freqs {curr-elem (inc n-found)}) (rest a-seq))
-        (my-frequencies-helper (conj freqs {curr-elem 1}) (rest a-seq))))))
+      (my-frequencies-helper (conj freqs {curr-elem (inc n-found)}) (rest a-seq)))))
 
 (defn my-frequencies [a-seq]
   (my-frequencies-helper {} a-seq))
 
 (defn un-frequencies [a-map]
-  [:-])
+  (if (empty? a-map)
+    a-map
+    (let [key-cur (first (map key a-map))
+          freq-cur (get a-map key-cur)]
+      (conj []) (repeat freq-cur key-cur)))))
+
+(un-frequencies {:a 3 :b 2 "^_^" 1})
 
 (defn my-take [n coll]
   [:-])
